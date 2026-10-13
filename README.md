@@ -2,6 +2,8 @@
 
 **An interactive software validation demonstration.** A simulated underwater navigation processor with a live automated test suite, fault injection and a regression-testing walkthrough. It's designed to be opened on a phone from a QR code and explored in under two minutes.
 
+**Live demo:** https://subsea-test-lab.vercel.app · **Printable info & QR:** https://subsea-test-lab.vercel.app/info
+
 > All data is simulated. This is a personal portfolio project. It does not represent Sonardyne technology, has not been validated against real underwater equipment, and its requirements are fictional.
 
 ---
