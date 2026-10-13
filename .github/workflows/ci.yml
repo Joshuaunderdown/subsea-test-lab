@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  verify:
+    name: Typecheck, test, build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+
+  defect-detection:
+    name: Tests must FAIL on the defective build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      # Proves the suite is capable of catching the injected positionError() defect.
+      # If these tests ever PASS against the defective build, the safety net is broken.
+      - name: Run tests with SUBSEA_INJECT_DEFECT=1 (expected to fail)
+        run: |
+          if SUBSEA_INJECT_DEFECT=1 npx vitest run; then
+            echo "::error::Test suite PASSED against the defective build: tests no longer detect the defect."
+            exit 1
+          else
+            echo "Test suite failed against the defective build, as expected. Defect detected."
+          fi
